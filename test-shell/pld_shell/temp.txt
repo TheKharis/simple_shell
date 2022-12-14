@@ -1,0 +1,6 @@
+		else
+		{
+			perror("Error: fork failed");
+			exit(1);
+		}
+
