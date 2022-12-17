@@ -13,5 +13,7 @@
 
 /* execute PATH */
 char *search_path(const char *command);
-
+/* print environment variables */
+void print_env(void);
+extern char **environ;
 #endif /* _MAIN_H */
