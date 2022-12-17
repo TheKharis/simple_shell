@@ -38,13 +38,13 @@ int main(__attribute__((unused))int ac, char **av)
 			token = strtok(NULL, TOKEN_DELIMITERS);
 		}
 		token_args[i] = NULL;
-		if (strcmp(token_args[0], "exit") == 0)
+		if (strcmp(token_args[0], "exit") == 0) /* exit */
 		{
 			free(line);
 			free(line_copy);
 			exit(EXIT_SUCCESS);
 		}
-		if (strcmp(token_args[0], "env") == 0)
+		if (strcmp(token_args[0], "env") == 0) /* print env vars */
 		{
 			print_env();
 		}
