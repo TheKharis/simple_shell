@@ -36,34 +36,38 @@ int main(__attribute__((unused))int ac, char **av)
 			token_args[i] = token;
 			i++;
 			token = strtok(NULL, TOKEN_DELIMITERS);
-		} 
+		}
 		token_args[i] = NULL;
 		if (strcmp(token_args[0], "exit") == 0)
 		{
 			free(line);
 			free(line_copy);
-			exit(EXIT_SUCCESS); 
+			exit(EXIT_SUCCESS);
+		}
+		if (strcmp(token_args[0], "env") == 0)
+		{
+			print_env();
 		}
 		pid = fork(); /* create fork */
 		if (pid < 0)
 		{
 			perror("fork");
 			exit(1);
-		} 
+		}
 		else if (pid == 0) /* child process */
 		{
 			full_path = search_path(token_args[0]);
 			if (full_path == NULL)
 			{
 				perror("execve");
-				exit(1); 
+				exit(1);
 			}
 			if (execve(full_path, token_args, NULL) < 0) /* execute commands */
 			{
 				perror(av[0]);
 				exit(1); }
 			free(full_path);
-		} 
+		}
 		else
 		{
 			wait(NULL); /* parent process */
