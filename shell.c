@@ -10,8 +10,8 @@ int main(__attribute__((unused))int ac, char **av)
 	char *line = NULL, *line_copy;
 	char *full_path;
 	char *token = NULL, *token_args[BUFFER_SIZE];
-	pid_t pid;
 	size_t n = 0;
+	pid_t pid;
 	int i;
 
 	while (1)
@@ -48,32 +48,34 @@ int main(__attribute__((unused))int ac, char **av)
 		{
 			print_env();
 		}
-		pid = fork(); /* create fork */
-		if (pid < 0)
+		full_path = search_path(token_args[0]);
+		if (full_path != NULL)
 		{
-			perror("fork");
-			exit(1);
-		}
-		else if (pid == 0) /* child process */
-		{
-			full_path = search_path(token_args[0]);
-			if (full_path == NULL)
+			pid = fork(); /* create fork */
+			if (pid < 0)
 			{
-				perror("execve");
+				perror("fork");
 				exit(1);
 			}
-			if (execve(full_path, token_args, NULL) < 0) /* execute commands */
+			else if (pid == 0) /* child process */
 			{
-				perror(av[0]);
-				exit(1); }
-			free(full_path);
+				if (execve(full_path, token_args, NULL) < 0) /* execute commands */
+				{
+					perror(av[0]);
+					exit(1);
+				}
+				free(full_path);
+			}
+			else
+			{
+				wait(NULL); /* parent process */
+				free(line_copy);
+			}
 		}
 		else
-		{
-			wait(NULL); /* parent process */
-			free(line_copy);
-		}
+			perror("execve");
 	}
 	free(line);
 	return (0);
+
 }
