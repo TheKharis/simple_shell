@@ -7,22 +7,16 @@
  */
 int main(__attribute__((unused))int ac, char **av)
 {
-	char *line = NULL, *line_copy;
+	char *line = malloc(sizeof(char) * BUFFER_SIZE), *line_copy;
 	char *full_path;
 	char *token = NULL, *token_args[BUFFER_SIZE];
-	size_t n = 0;
 	pid_t pid;
 	int i;
 
 	while (1)
 	{
 		printf("$ "); /* prompt */
-		if (getline(&line, &n, stdin) < 0)
-		{
-			printf("\n");
-			free(line);
-			exit(1);
-		}
+		_getline(&line);
 		line_copy = strdup(line); /* duplicate input str*/
 		if (line_copy == NULL)
 		{
