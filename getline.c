@@ -14,7 +14,7 @@ void _getline(char **line)
 	if (char_read == -1)
 	{
 		printf("\n");
-		free(line);
+		free(*line);
 		exit(1);
 	}
 }
