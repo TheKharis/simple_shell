@@ -14,6 +14,12 @@
 /* read user input from command line */
 void _getline(char **line);
 
+/* exit_env */
+void exit_env(char *str, char *line, char *line_copy);
+
+/* error handling */
+void _err(char *str, int exit_num);
+
 /* execute PATH */
 char *search_path(const char *command);
 
