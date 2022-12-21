@@ -2,12 +2,12 @@
 
 /**
  * _getline - take user input from command line
- *
+ * @line: input string from command line
  * Return: void
  */
 void _getline(char **line)
 {
-	size_t n; 
+	size_t n;
 	ssize_t char_read;
 
 	char_read = getline(line, &n, stdin);
