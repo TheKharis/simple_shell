@@ -37,7 +37,7 @@ int main(__attribute__((unused))int ac, char **av)
 				_err("fork", 1);
 			else if (pid == 0) /* child process */
 			{
-				if (execve(full_path, token_args, environ) < 0) /* execute commands */
+				if (execve(full_path, token_args, NULL) < 0) /* execute commands */
 					_err(av[0], 1);
 				free(full_path);
 			} else
