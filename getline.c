@@ -15,6 +15,6 @@ void _getline(char **line)
 	{
 		printf("\n");
 		free(*line);
-		exit(0);
+		exit(1);
 	}
 }
