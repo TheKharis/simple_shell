@@ -7,44 +7,44 @@
  */
 int main(__attribute__((unused))int ac, char **av)
 {
-	char *line = malloc(sizeof(char) * BUFFER_SIZE), *line_copy;
-	char *full_path;
-	char *token = NULL, *token_args[BUFFER_SIZE];
+	char *lineptr = NULL;
+	char *token = NULL, *token_args[30];
 	pid_t pid;
-	int i;
+	size_t n = 0;
+	int i = 0;
 
 	while (1)
 	{
 		printf("$ "); /* prompt */
-		_getline(&line);
-		line_copy = strdup(line); /* duplicate input str*/
-		if (line_copy == NULL)
-			_err("strdup", 1);
-		i = 0;
-		token = strtok(line_copy, TOKEN_DELIMITERS);
-		while (token != NULL)
+		if (getline(&lineptr, &n, stdin) < 0)
 		{
-			token_args[i] = token;
-			i++;
-			token = strtok(NULL, TOKEN_DELIMITERS);
-		} token_args[i] = NULL;
-		full_path = search_path(token_args[0]);
-		exit_env(token_args[0], line, line_copy);
-		if (full_path != NULL)
+			printf("\n");
+			free(lineptr);
+			exit(1);
+		}
+		pid = fork(); /* create fork */
+		if (pid < 0)
 		{
-			pid = fork(); /* create fork */
-			if (pid < 0)
-				_err("fork", 1);
-			else if (pid == 0) /* child process */
+			perror("fork");
+			exit(1);
+		} else if (pid == 0)
+		{
+			token = strtok(lineptr, " \n"); /* split strings into words */
+			while (token != NULL)
 			{
-				if (execve(full_path, token_args, NULL) < 0) /* execute commands */
-					_err(av[0], 1);
-				free(full_path);
-			} else
+				token_args[i] = token; /* token arguments */
+				i++;
+				token = strtok(NULL, " \n"); /* second string */
+			} token_args[i] = NULL; /* add null character to end of argument */
+			if (execve(token_args[0], token_args, NULL) < 0) /* execute commands */
 			{
-				wait(NULL); /* parent process */
-				free(line_copy); }
-		} else
-			perror("execve"); }
-	free(line);
-	return (0); }
+				perror(av[0]);
+				exit(1);
+			}
+		}
+		else
+			wait(NULL);
+	}
+	free(lineptr);
+	return (0);
+}
